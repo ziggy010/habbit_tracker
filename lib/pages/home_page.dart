@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
         child: const Center(
           child: Icon(
             Icons.add,
-            color: Colors.white,
+            color: Colors.green,
           ),
         ),
         onPressed: () {
