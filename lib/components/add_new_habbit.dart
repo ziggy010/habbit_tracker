@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:habbit_tracker/components/reusable_button.dart';
 
 class AddNewHabit extends StatelessWidget {
-  const AddNewHabit({super.key});
+  VoidCallback onSave;
+  final controller;
+
+  AddNewHabit({
+    required this.onSave,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +18,9 @@ class AddNewHabit extends StatelessWidget {
         child: Column(
           children: [
             TextField(
+              controller: controller,
               cursorColor: Colors.black,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
@@ -28,12 +35,16 @@ class AddNewHabit extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ReusableButton(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
                     height: 50,
                     width: 100,
                     buttonColor: Colors.red,
                     buttonText: 'Cancel',
                   ),
                   ReusableButton(
+                    onTap: onSave,
                     height: 50,
                     width: 100,
                     buttonColor: Colors.green,

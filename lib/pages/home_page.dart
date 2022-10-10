@@ -10,6 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  TextEditingController _controller = TextEditingController();
+
   List<HabbitTileModel> habbitList = [
     HabbitTileModel(habbitText: 'Do Exercise', habbitStatus: false),
     HabbitTileModel(habbitText: 'Code App', habbitStatus: true),
@@ -21,6 +23,20 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       habbitList[index].habbitStatus = initialValue;
     });
+  }
+
+  //function to save the habbit
+  void saveNewHabbit() {
+    setState(() {
+      habbitList.add(
+        HabbitTileModel(
+          habbitText: _controller.text,
+          habbitStatus: false,
+        ),
+      );
+    });
+    _controller.clear();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -51,7 +67,10 @@ class _HomePageState extends State<HomePage> {
           showDialog(
               context: context,
               builder: (context) {
-                return AddNewHabit();
+                return AddNewHabit(
+                  controller: _controller,
+                  onSave: saveNewHabbit,
+                );
               });
         },
       ),
