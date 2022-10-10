@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habbit_tracker/components/reusable_button.dart';
 
 class AddNewHabit extends StatelessWidget {
   const AddNewHabit({super.key});
@@ -22,9 +23,23 @@ class AddNewHabit extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(top: 30),
               child: Row(
-                children: [],
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ReusableButton(
+                    height: 50,
+                    width: 100,
+                    buttonColor: Colors.red,
+                    buttonText: 'Cancel',
+                  ),
+                  ReusableButton(
+                    height: 50,
+                    width: 100,
+                    buttonColor: Colors.green,
+                    buttonText: 'Save',
+                  ),
+                ],
               ),
             ),
           ],
