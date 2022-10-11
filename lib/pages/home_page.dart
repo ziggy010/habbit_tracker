@@ -39,6 +39,11 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).pop();
   }
 
+  //function to cancel the dialog box
+  void cancelDialogBox() {
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +75,7 @@ class _HomePageState extends State<HomePage> {
               return AddNewHabit(
                 controller: _controller,
                 onSave: saveNewHabbit,
+                onCancel: cancelDialogBox,
               );
             },
           );

@@ -3,10 +3,12 @@ import 'package:habbit_tracker/components/reusable_button.dart';
 
 class AddNewHabit extends StatelessWidget {
   VoidCallback onSave;
+  VoidCallback onCancel;
   final controller;
 
   AddNewHabit({
     required this.onSave,
+    required this.onCancel,
     required this.controller,
   });
 
@@ -35,9 +37,7 @@ class AddNewHabit extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ReusableButton(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
+                    onTap: onCancel,
                     height: 50,
                     width: 100,
                     buttonColor: Colors.red,
