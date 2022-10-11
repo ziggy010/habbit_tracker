@@ -65,13 +65,14 @@ class _HomePageState extends State<HomePage> {
         ),
         onPressed: () {
           showDialog(
-              context: context,
-              builder: (context) {
-                return AddNewHabit(
-                  controller: _controller,
-                  onSave: saveNewHabbit,
-                );
-              });
+            context: context,
+            builder: (context) {
+              return AddNewHabit(
+                controller: _controller,
+                onSave: saveNewHabbit,
+              );
+            },
+          );
         },
       ),
     );
