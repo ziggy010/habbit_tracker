@@ -42,6 +42,35 @@ class _HomePageState extends State<HomePage> {
   //function to cancel the dialog box
   void cancelDialogBox() {
     Navigator.of(context).pop();
+    _controller.clear();
+  }
+
+  //function to delete habit
+  void deleteHabit(int index) {
+    setState(() {
+      habbitList.removeAt(index);
+    });
+  }
+
+  //function to edit habbit
+  editHabit(int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AddNewHabit(
+          hintText: habbitList[index].habbitText,
+          onSave: () {
+            setState(() {
+              habbitList[index].habbitText = _controller.text;
+            });
+            Navigator.of(context).pop();
+            _controller.clear();
+          },
+          onCancel: cancelDialogBox,
+          controller: _controller,
+        );
+      },
+    );
   }
 
   @override
@@ -57,6 +86,8 @@ class _HomePageState extends State<HomePage> {
             onChanged: (value) {
               checkBoxTapped(value!, index);
             },
+            onDelete: (context) => deleteHabit(index),
+            onEdit: (context) => editHabit(index),
           );
         },
       ),
@@ -73,6 +104,7 @@ class _HomePageState extends State<HomePage> {
             context: context,
             builder: (context) {
               return AddNewHabit(
+                hintText: 'Enter habbit name..',
                 controller: _controller,
                 onSave: saveNewHabbit,
                 onCancel: cancelDialogBox,

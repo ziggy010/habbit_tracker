@@ -5,28 +5,41 @@ class AddNewHabit extends StatelessWidget {
   VoidCallback onSave;
   VoidCallback onCancel;
   final controller;
+  final String hintText;
 
   AddNewHabit({
     required this.onSave,
     required this.onCancel,
     required this.controller,
+    required this.hintText,
   });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.grey.shade800,
       content: Container(
-        height: 160,
+        height: 150,
         child: Column(
           children: [
             TextField(
+              style: TextStyle(
+                color: Colors.white,
+              ),
               controller: controller,
-              cursorColor: Colors.black,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+              cursorColor: Colors.white,
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: TextStyle(
+                  color: Colors.grey.shade600,
+                ),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                  color: Colors.grey.shade200,
+                )),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.black,
+                    color: Colors.grey.shade200,
                   ),
                 ),
               ),
