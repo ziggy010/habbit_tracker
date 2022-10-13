@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habbit_tracker/model/habbit_tile_model.dart';
+import 'package:habbit_tracker/data/habbit_database.dart';
+import 'package:hive/hive.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import '../components/add_new_habbit.dart';
 import '../components/habbit_tile.dart';
@@ -10,31 +12,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var _myBox = Hive.box("Hive_database");
+
+  HabbitDatabase db = HabbitDatabase();
+
   TextEditingController _controller = TextEditingController();
 
-  List<HabbitTileModel> habbitList = [
-    HabbitTileModel(habbitText: 'Do Exercise', habbitStatus: false),
-    HabbitTileModel(habbitText: 'Code App', habbitStatus: true),
-  ];
+  @override
+  void initState() {
+    if (_myBox.get('Current_habit_list') == null) {
+      db.createInitalizationData();
+    } else {
+      db.loadData();
+    }
+
+    print(_myBox.get('Current_habit_list'));
+
+    super.initState();
+  }
 
   // function to change the checkbox status
 
   void checkBoxTapped(bool initialValue, int index) {
     setState(() {
-      habbitList[index].habbitStatus = initialValue;
+      db.habbitList[index][1] = initialValue;
     });
+    db.updateDatabase();
   }
 
   //function to save the habbit
   void saveNewHabbit() {
     setState(() {
-      habbitList.add(
-        HabbitTileModel(
-          habbitText: _controller.text,
-          habbitStatus: false,
-        ),
+      db.habbitList.add(
+        [_controller.text, false],
       );
     });
+    db.updateDatabase();
+    print(_myBox.get('Current_habit_list'));
     _controller.clear();
     Navigator.of(context).pop();
   }
@@ -48,8 +62,9 @@ class _HomePageState extends State<HomePage> {
   //function to delete habit
   void deleteHabit(int index) {
     setState(() {
-      habbitList.removeAt(index);
+      db.habbitList.removeAt(index);
     });
+    db.updateDatabase();
   }
 
   //function to edit habbit
@@ -58,11 +73,12 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return AddNewHabit(
-          hintText: habbitList[index].habbitText,
+          hintText: db.habbitList[index][0],
           onSave: () {
             setState(() {
-              habbitList[index].habbitText = _controller.text;
+              db.habbitList[index][0] = _controller.text;
             });
+            db.updateDatabase();
             Navigator.of(context).pop();
             _controller.clear();
           },
@@ -73,23 +89,35 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //to load data
+  Future<void> onRefreshLoad() async {
+    await Future.delayed(Duration(seconds: 2));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple.shade300,
-      body: ListView.builder(
-        itemCount: habbitList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return HabbitTile(
-            habbitStatus: habbitList[index].habbitStatus,
-            habbitText: habbitList[index].habbitText,
-            onChanged: (value) {
-              checkBoxTapped(value!, index);
-            },
-            onDelete: (context) => deleteHabit(index),
-            onEdit: (context) => editHabit(index),
-          );
-        },
+      body: LiquidPullToRefresh(
+        backgroundColor: Colors.deepPurple.shade300,
+        height: 250,
+        animSpeedFactor: 2,
+        color: Colors.deepPurple,
+        onRefresh: onRefreshLoad,
+        child: ListView.builder(
+          itemCount: db.habbitList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return HabbitTile(
+              habbitStatus: db.habbitList[index][1],
+              habbitText: db.habbitList[index][0],
+              onChanged: (value) {
+                checkBoxTapped(value!, index);
+              },
+              onDelete: (context) => deleteHabit(index),
+              onEdit: (context) => editHabit(index),
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepPurple.shade600,

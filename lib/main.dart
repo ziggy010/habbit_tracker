@@ -9,7 +9,7 @@ void main(List<String> args) async {
   await Hive.initFlutter();
 
   //open hive box
-  await Hive.openBox("Hive_Database");
+  await Hive.openBox("Hive_database");
 
   runApp(MyApp());
 }
